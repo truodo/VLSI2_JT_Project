@@ -26,14 +26,14 @@ module croc_soc import croc_pkg::*; #(
 
   input  logic [GpioCount-1:0] gpio_i,       // Input from GPIO pins
   output logic [GpioCount-1:0] gpio_o,       // Output to GPIO pins
-  output logic [GpioCount-1:0] gpio_out_en_o // Output enable signal; 0 -> input, 1 -> output
+  output logic [GpioCount-1:0] gpio_out_en_o, // Output enable signal; 0 -> input, 1 -> output
 
   // user domain
   output  logic           flash_sck_o,
   output  logic           flash_ce_n_o,
   input   logic [3:0]     flash_din_i,
   output  logic [3:0]     flash_dout_o,
-  output  logic [3:0]     flash_dout_en_o,
+  output  logic [3:0]     flash_dout_en_o
 
 );
 

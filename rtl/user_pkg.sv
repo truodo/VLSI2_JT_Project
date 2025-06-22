@@ -40,7 +40,7 @@ package user_pkg;
 
   // Address rules given to address decoder
   localparam croc_pkg::addr_map_rule_t [NumDemuxSbrRules-1:0] user_addr_map = '{
-    '{ idx: UserPeriphFlash, start_addr: FlashAddrOffset, end_addr:   FlashAddrOffset + FlashAddrRange } // 1: Flash
+    '{ idx: UserFlash, start_addr: FlashAddrOffset, end_addr:   FlashAddrOffset + FlashAddrRange } // 1: Flash
     };
 
 endpackage

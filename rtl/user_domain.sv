@@ -141,7 +141,7 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
     .obi_rsp_o  ( user_error_obi_rsp )
   );
 
-  `ifdef PnR
+  // `ifdef PnR // TODO check this again
   obi2ahbm_adapter i_obi2ahbm_adapter_flash (
        // Clock and reset
        .hclk_i      ( clk_i ),                // (I) AHB clock
@@ -176,10 +176,10 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
        .priv_mode_i   ( 1'b1 )       // (I) Privilege mode (from core. 1=machine mode, 0=user mode)
     );
 
-    assign flash_HSEL = periph_idx == PeriphFlash;
+    assign flash_HSEL = user_idx == UserFlash;
     assign flash_HREADY = flash_HREADYOUT;
 
-    assign user_flash_obi_rsp.r.rid = flash_obi_req.a.aid;
+    assign user_flash_obi_rsp.r.rid = user_flash_obi_req.a.aid;
     assign user_flash_obi_rsp.r.r_optional = 1'b0;
 
     EF_QSPI_XIP_CTRL_AHBL 
@@ -203,66 +203,66 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
         .HRDATA      ( flash_HRDATA    ),
 
         // External Interface to Quad I/O
-        .sck     ( flash_sck    ),
-        .ce_n    ( flash_ce_n   ),
-        .din     ( flash_din    ),
-        .dout    ( flash_dout   ),
-        .douten  ( flash_dout_en )
+        .sck     ( flash_sck_o    ),
+        .ce_n    ( flash_ce_n_o   ),
+        .din     ( flash_din_i    ),
+        .dout    ( flash_dout_o   ),
+        .douten  ( flash_dout_en_o )
     );
 
-    `else
+  //   `else
 
-    // Use a ROM for FPGA
+  //   // Use a ROM for FPGA
     
-    localparam RomAddrWidth = 12; // in words, in total 16kByte memory
+  //   localparam RomAddrWidth = 12; // in words, in total 16kByte memory
 
-    logic rom_req, rom_we, rom_gnt, rom_single_err;
-    logic [SbrObiCfg.AddrWidth-1:0] rom_byte_addr;
-    logic [RomAddrWidth-1:0] rom_word_addr;
-    logic [SbrObiCfg.DataWidth-1:0] rom_wdata, rom_rdata;
-    logic [SbrObiCfg.DataWidth/8-1:0] rom_be;
+  //   logic rom_req, rom_we, rom_gnt, rom_single_err;
+  //   logic [SbrObiCfg.AddrWidth-1:0] rom_byte_addr;
+  //   logic [RomAddrWidth-1:0] rom_word_addr;
+  //   logic [SbrObiCfg.DataWidth-1:0] rom_wdata, rom_rdata;
+  //   logic [SbrObiCfg.DataWidth/8-1:0] rom_be;
 
-    obi_sram_shim #(
-      .ObiCfg    ( SbrObiCfg     ),
-      .obi_req_t ( sbr_obi_req_t ),
-      .obi_rsp_t ( sbr_obi_rsp_t )
-    ) i_rom_shim (
-      .clk_i,
-      .rst_ni,
+  //   obi_sram_shim #(
+  //     .ObiCfg    ( SbrObiCfg     ),
+  //     .obi_req_t ( sbr_obi_req_t ),
+  //     .obi_rsp_t ( sbr_obi_rsp_t )
+  //   ) i_rom_shim (
+  //     .clk_i,
+  //     .rst_ni,
 
-      .obi_req_i ( user_flash_obi_req ),
-      .obi_rsp_o ( user_flash_obi_rsp ),
+  //     .obi_req_i ( user_flash_obi_req ),
+  //     .obi_rsp_o ( user_flash_obi_rsp ),
 
-      .req_o   ( rom_req       ),
-      .we_o    ( rom_we        ),
-      .addr_o  ( rom_byte_addr ),
-      .wdata_o ( rom_wdata     ),
-      .be_o    ( rom_be        ),
+  //     .req_o   ( rom_req       ),
+  //     .we_o    ( rom_we        ),
+  //     .addr_o  ( rom_byte_addr ),
+  //     .wdata_o ( rom_wdata     ),
+  //     .be_o    ( rom_be        ),
 
-      .gnt_i   ( rom_gnt   ),
-      .rdata_i ( rom_rdata )
-    );
+  //     .gnt_i   ( rom_gnt   ),
+  //     .rdata_i ( rom_rdata )
+  //   );
 
-    assign rom_word_addr = rom_byte_addr[SbrObiCfg.AddrWidth-1:2];
+  //   assign rom_word_addr = rom_byte_addr[SbrObiCfg.AddrWidth-1:2];
 
-    // 4kByte memory
-    logic [31:0] rom [2**RomAddrWidth];
+  //   // 4kByte memory
+  //   logic [31:0] rom [2**RomAddrWidth];
     
-    // 	initial begin
-		// $readmemh("firmware/hello_world/hello_world.hex", rom);
-	// end
+  //   // 	initial begin
+	// 	// $readmemh("firmware/hello_world/hello_world.hex", rom);
+	// // end
     
-    always @(posedge clk_i) begin
-        if (rom_req) begin
-            if (!rom_we) begin
-                rom_rdata <= rom[rom_word_addr];
-            end
-        end
-    end
+  //   always @(posedge clk_i) begin
+  //       if (rom_req) begin
+  //           if (!rom_we) begin
+  //               rom_rdata <= rom[rom_word_addr];
+  //           end
+  //       end
+  //   end
 
-    assign rom_gnt = 1'b1;
+  //   assign rom_gnt = 1'b1;
     
-    `endif
+  //   `endif
   
 
 endmodule
