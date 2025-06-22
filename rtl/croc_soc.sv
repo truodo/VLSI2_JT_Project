@@ -27,6 +27,14 @@ module croc_soc import croc_pkg::*; #(
   input  logic [GpioCount-1:0] gpio_i,       // Input from GPIO pins
   output logic [GpioCount-1:0] gpio_o,       // Output to GPIO pins
   output logic [GpioCount-1:0] gpio_out_en_o // Output enable signal; 0 -> input, 1 -> output
+
+  // user domain
+  output  logic           flash_sck_o,
+  output  logic           flash_ce_n_o,
+  input   logic [3:0]     flash_din_i,
+  output  logic [3:0]     flash_dout_o,
+  output  logic [3:0]     flash_dout_en_o,
+
 );
 
   logic synced_rst_n, synced_fetch_en;
@@ -101,6 +109,12 @@ user_domain #(
   .rst_ni ( synced_rst_n ),
   .ref_clk_i,
   .testmode_i,
+
+  .flash_sck_o,
+  .flash_ce_n_o,
+  .flash_din_i,
+  .flash_dout_o,
+  .flash_dout_en_o,
 
   .user_sbr_obi_req_i ( user_sbr_obi_req ),
   .user_sbr_obi_rsp_o ( user_sbr_obi_rsp ),

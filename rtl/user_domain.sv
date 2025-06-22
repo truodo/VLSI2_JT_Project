@@ -18,7 +18,7 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
   output  logic           flash_ce_n_o,
   input   logic [3:0]     flash_din_i,
   output  logic [3:0]     flash_dout_o,
-  output  logic [3:0]     flash_douten_o,
+  output  logic [3:0]     flash_dout_en_o,
   
   input  sbr_obi_req_t user_sbr_obi_req_i, // User Sbr (rsp_o), Croc Mgr (req_i)
   output sbr_obi_rsp_t user_sbr_obi_rsp_o,
@@ -207,7 +207,7 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
         .ce_n    ( flash_ce_n   ),
         .din     ( flash_din    ),
         .dout    ( flash_dout   ),
-        .douten  ( flash_douten )
+        .douten  ( flash_dout_en )
     );
 
     `else

@@ -187,4 +187,5 @@ rtl/croc_domain.sv
 rtl/user_domain.sv
 rtl/croc_soc.sv
 rtl/croc_chip.sv
+rtl/flash/obi2ahbm_adapter.sv
 

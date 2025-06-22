@@ -22,7 +22,7 @@ package user_pkg;
   /////////////////////////////////////
 
   localparam int unsigned NumUserDomainSubordinates = 1;
-
+  // TODO writing our name in it and change some variables later on nothing is ready for it so far
   // localparam bit [31:0] UserRomAddrOffset   = croc_pkg::UserBaseAddr; // 32'h2000_0000;
   // localparam bit [31:0] UserRomAddrRange    = 32'h0000_1000;          // every subordinate has at least 4KB
 
