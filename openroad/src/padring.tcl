@@ -132,12 +132,12 @@ place_pad -row IO_NORTH  -location [expr $start -  4*$pitch] "pad_gpio26_io"    
 place_pad -row IO_NORTH  -location [expr $start -  5*$pitch] "pad_gpio27_io"       ; # pin no:  6
 place_pad -row IO_NORTH  -location [expr $start -  6*$pitch] "pad_gpio28_io"       ; # pin no:  7
 place_pad -row IO_NORTH  -location [expr $start -  7*$pitch] "pad_gpio29_io"       ; # pin no:  8
-place_pad -row IO_NORTH  -location [expr $start -  8*$pitch] "flash_sck_o"       ; # pin no:  9
-place_pad -row IO_NORTH  -location [expr $start -  9*$pitch] "flash_ce_n_o"       ; # pin no: 10
-place_pad -row IO_NORTH  -location [expr $start - 10*$pitch] "flash_d0_io"       ; # pin no: 11
-place_pad -row IO_NORTH  -location [expr $start - 11*$pitch] "flash_d1_io"       ; # pin no: 12
-place_pad -row IO_NORTH  -location [expr $start - 12*$pitch] "flash_d2_io"       ; # pin no: 13
-place_pad -row IO_NORTH  -location [expr $start - 13*$pitch] "flash_d3_io"       ; # pin no: 14
+place_pad -row IO_NORTH  -location [expr $start -  8*$pitch] "pad_flash_sck_o"       ; # pin no:  9
+place_pad -row IO_NORTH  -location [expr $start -  9*$pitch] "pad_flash_ce_n_o"       ; # pin no: 10
+place_pad -row IO_NORTH  -location [expr $start - 10*$pitch] "pad_flash_d0_io"       ; # pin no: 11
+place_pad -row IO_NORTH  -location [expr $start - 11*$pitch] "pad_flash_d1_io"       ; # pin no: 12
+place_pad -row IO_NORTH  -location [expr $start - 12*$pitch] "pad_flash_d2_io"       ; # pin no: 13
+place_pad -row IO_NORTH  -location [expr $start - 13*$pitch] "pad_flash_d3_io"       ; # pin no: 14
 place_pad -row IO_NORTH  -location [expr $start - 14*$pitch] "pad_vss3"            ; # pin no: 15
 place_pad -row IO_NORTH  -location [expr $start - 15*$pitch] "pad_vdd3"            ; # pin no: 16
 

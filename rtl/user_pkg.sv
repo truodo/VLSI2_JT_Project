@@ -41,7 +41,7 @@ package user_pkg;
 
   // Address rules given to address decoder
   localparam croc_pkg::addr_map_rule_t [NumDemuxSbrRules-1:0] user_addr_map = '{
-    '{ idx: UserRom, start_addr: UserRomAddrOffset, end_addr:   UserRomAddrOffset + UserRomAddrRange } // 1: Rom
+    '{ idx: UserRom, start_addr: UserRomAddrOffset, end_addr:   UserRomAddrOffset + UserRomAddrRange }, // 1: Rom
     '{ idx: UserFlash, start_addr: FlashAddrOffset, end_addr:   FlashAddrOffset + FlashAddrRange } // 2: Flash
     };
 
