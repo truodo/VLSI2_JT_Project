@@ -50,12 +50,6 @@ module tb_croc_soc #(
 
     wire [3:0] flash_io;
     
-    assign flash_din = flash_io;
-
-    assign flash_io[0] = flash_dout_en_o[0] ? flash_dout_o[0] : 1'bz;
-    assign flash_io[1] = flash_dout_en_o[1] ? flash_dout_o[1] : 1'bz;
-    assign flash_io[2] = flash_dout_en_o[2] ? flash_dout_o[2] : 1'bz;
-    assign flash_io[3] = flash_dout_en_o[3] ? flash_dout_o[3] : 1'bz;
 
     // Register addresses
     localparam bit [31:0] BootAddrAddr   = croc_pkg::SocCtrlAddrOffset
@@ -107,6 +101,7 @@ module tb_croc_soc #(
         .rst_no ( )
     );
 
+    
 
     ////////////
     //  JTAG  //
@@ -410,6 +405,86 @@ module tb_croc_soc #(
         end
     end
 
+    //////////////////
+    //  QSPI Flash  //
+    //////////////////
+
+    assign flash_din = flash_io;
+    assign flash_sck_o = clk; // testbench clock
+
+    assign flash_io[0] = flash_dout_en_o[0] ? flash_dout_o[0] : 1'bz;
+    assign flash_io[1] = flash_dout_en_o[1] ? flash_dout_o[1] : 1'bz;
+    assign flash_io[2] = flash_dout_en_o[2] ? flash_dout_o[2] : 1'bz;
+    assign flash_io[3] = flash_dout_en_o[3] ? flash_dout_o[3] : 1'bz;
+
+    task automatic flash_power_up;
+        begin
+            flash_ce_n_o = 1'b0;
+            spi_send_byte(8'hAB);  // Power-up command
+            flash_ce_n_o = 1'b1;
+            #100;  // Wait for power-up
+        end
+    endtask
+    
+    task automatic spi_send_byte(input [7:0] data);
+        integer i;
+        begin
+            flash_dout_en_o = 4'b0001;  // Only drive MOSI
+            for (i = 7; i >= 0; i = i - 1) begin
+                @(negedge clk);
+                flash_dout_o[0] <= data[i]; // MOSI on io0
+                @(posedge clk);
+            end
+            flash_dout_en_o = 4'b0000; 
+        end
+    endtask
+
+    task automatic spi_recv_byte(output [7:0] data);
+        integer i;
+        begin
+            flash_dout_en_o = 4'b0000;
+            data = 0;
+            for (i = 7; i >= 0; i = i - 1) begin
+                @(posedge clk);
+                data[i] = flash_io[1]; //MISO on io1
+            end
+        end
+    endtask
+
+    task automatic spi_read(
+        input [31:0] addr,
+        output [7:0] read_data
+        );
+        begin
+            flash_ce_n_o = 0;
+            spi_send_byte(8'h03); // Read command
+            spi_send_byte(addr[23:16]);
+            spi_send_byte(addr[15:8]);
+            spi_send_byte(addr[7:0]);
+
+            
+            flash_dout_en_o[0] = 0;
+            flash_dout_en_o[1] = 0;
+            flash_dout_en_o[2] = 0;
+            flash_dout_en_o[3] = 0;
+
+            spi_recv_byte(read_data);
+
+            flash_ce_n_o = 1;
+             #20;  // Add tCSH (Chip Select Hold Time)
+        end
+    endtask
+
+
+    spiflash i_spiflash (
+	    .csb (flash_ce_n_o),
+	    .clk (flash_sck_o),
+	    .io0 (flash_io[0]), // MOSI
+	    .io1 (flash_io[1]), // MISO
+	    .io2 (flash_io[2]),
+	    .io3 (flash_io[3])
+    );
+
 
 
     ////////////
@@ -471,6 +546,12 @@ module tb_croc_soc #(
         uart_rx_i  = 1'b0;
         fetch_en_i = 1'b0;
         
+        //flash things
+        flash_ce_n_o = 1;
+        clk = 0;
+        flash_dout_o = 0;
+        flash_dout_en_o = 0;
+
         // wait for reset
         #ClkPeriod;
 
@@ -494,6 +575,24 @@ module tb_croc_soc #(
         // wait for non-zero return value (written into core status register)
         $display("@%t | [CORE] Wait for end of code...", $time);
         jtag_wait_for_eoc(tb_data);
+        
+
+        flash_power_up();
+        $display("=== Starting SPI transaction ===");
+        reg [7:0] data_out;
+
+        // Preload test pattern
+        i_spiflash.memory[0] = 8'hA5;
+        i_spiflash.memory[1] = 8'h5A;
+
+        // Test read
+        spi_read(user_pkg::FlashAddrOffset, rd_data);
+        $display("Read 0x%h from 0x000000 (expected 0xA5)", rd_data);
+        
+        spi_read(user_pkg::FlashAddrOffset+1, rd_data);
+        $display("Read 0x%h from 0x000001 (expected 0x5A)", rd_data);
+        
+
 
         // finish simulation
         repeat(50) @(posedge clk);
@@ -503,16 +602,5 @@ module tb_croc_soc #(
         $finish();
     end
 
-    //////////////////
-    //  QSPI Flash  //
-    //////////////////
-    spiflash i_spiflash (
-	    .csb (flash_ce_n),
-	    .clk (flash_sck),
-	    .io0 (flash_io[0]), // MOSI
-	    .io1 (flash_io[1]), // MISO
-	    .io2 (flash_io[2]),
-	    .io3 (flash_io[3])
-    );
 
 endmodule
