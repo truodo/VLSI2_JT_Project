@@ -42,6 +42,9 @@ void printf(const char *fmt, ...) {
                 for (int j = idx - 1; j >= 0; j--) {
                     putchar(buffer[j]);
                 }
+            } else if (*fmt == 'c') { // char
+                char chr = (char)va_arg(args, int);
+                putchar(chr);
             }
         } else {
             putchar(*fmt);

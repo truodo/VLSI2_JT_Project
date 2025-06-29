@@ -42,6 +42,21 @@ module tb_croc_soc #(
     logic [GpioCount-1:0] gpio_o;            
     logic [GpioCount-1:0] gpio_out_en_o;
 
+    logic           flash_sck_o;
+    logic           flash_ce_n_o;
+    logic [3:0]     flash_din_i;
+    logic [3:0]     flash_dout_o;
+    logic [3:0]     flash_dout_en_o;
+
+    wire [3:0] flash_io;
+    
+    assign flash_din = flash_io;
+
+    assign flash_io[0] = flash_dout_en_o[0] ? flash_dout_o[0] : 1'bz;
+    assign flash_io[1] = flash_dout_en_o[1] ? flash_dout_o[1] : 1'bz;
+    assign flash_io[2] = flash_dout_en_o[2] ? flash_dout_o[2] : 1'bz;
+    assign flash_io[3] = flash_dout_en_o[3] ? flash_dout_o[3] : 1'bz;
+
     // Register addresses
     localparam bit [31:0] BootAddrAddr   = croc_pkg::SocCtrlAddrOffset
                                            + soc_ctrl_reg_pkg::SOC_CTRL_BOOTADDR_OFFSET;
@@ -425,7 +440,13 @@ module tb_croc_soc #(
 
         .gpio_i        ( gpio_i        ),             
         .gpio_o        ( gpio_o        ),            
-        .gpio_out_en_o ( gpio_out_en_o )
+        .gpio_out_en_o ( gpio_out_en_o ),
+
+        .flash_sck_o     ( flash_sck_o      ),             
+        .flash_ce_n_o    ( flash_ce_n_o     ),            
+        .flash_din_i     ( flash_din_i      ),
+        .flash_dout_o    ( flash_dout_o     ),
+        .flash_dout_en_o ( flash_dout_en_o  )
     );
 
     assign gpio_i[ 3:0]          = '0;
@@ -481,5 +502,17 @@ module tb_croc_soc #(
         `endif
         $finish();
     end
+
+    //////////////////
+    //  QSPI Flash  //
+    //////////////////
+    spiflash i_spiflash (
+	    .csb (flash_ce_n),
+	    .clk (flash_sck),
+	    .io0 (flash_io[0]), // MOSI
+	    .io1 (flash_io[1]), // MISO
+	    .io2 (flash_io[2]),
+	    .io3 (flash_io[3])
+    );
 
 endmodule

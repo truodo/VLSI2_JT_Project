@@ -35,6 +35,7 @@ sources:
   # add your design files containing anything but modules (packages) here
   - rtl/user_domain/user_rom.sv
   - rtl/flash/obi2ahbm_adapter.sv
+  - rtl/flash/tb/spiflash.v
   - ip/EF_QSPI_XIP_CTRL/hdl/rtl/bus_wrappers/EF_QSPI_XIP_CTRL_AHBL.v
   - ip/EF_QSPI_XIP_CTRL/hdl/rtl/DMC.v
   - ip/EF_QSPI_XIP_CTRL/hdl/rtl/EF_QSPI_XIP_CTRL.v

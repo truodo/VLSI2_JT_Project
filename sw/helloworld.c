@@ -11,6 +11,13 @@
 #include "gpio.h"
 #include "util.h"
 
+#include "config.h"
+#include <string.h>
+#include <stdint.h>
+
+#define BYTES 32
+
+
 /// @brief Example integer square root
 /// @return integer square root of n
 uint32_t isqrt(uint32_t n) {
@@ -64,5 +71,24 @@ int main() {
     sleep_ms(10);
     printf("Tock\n");
     uart_write_flush();
+
+    // Userrom test
+    printf("BEGIN userrom test\n");
+    uart_write_flush();
+
+    char buf[BYTES];
+
+    // read bytes from ROM
+    for(int i = 0; i < BYTES; ++i) {
+        buf[i] = *reg8(USER_ROM_BASE_ADDR, i);
+        printf("%c", buf[i]);
+    }
+    printf("\n");
+    uart_write_flush();
+
+    CHECK_ASSERT(-1, strcmp("jerschmid and truodo", buf) == 0);
+    printf("END userrom test\n");
+    uart_write_flush();
+
     return 1;
 }
