@@ -26,7 +26,7 @@ package user_pkg;
   localparam bit [31:0] UserRomAddrOffset   = croc_pkg::UserBaseAddr; // 32'h2000_0000;
   localparam bit [31:0] UserRomAddrRange    = 32'h0000_1000;          // every subordinate has at least 4KB
 
-  localparam bit [31:0] FlashAddrOffset     = 32'h2000_5000; // 32'h2000_0000;
+  localparam bit [31:0] FlashAddrOffset     = 32'h3000_0000;
   localparam bit [31:0] FlashAddrRange      = 32'h0100_0000; // 24bit
 
   localparam int unsigned NumDemuxSbrRules  = NumUserDomainSubordinates; // number of address rules in the decoder

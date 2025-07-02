@@ -25,3 +25,6 @@
 
 // User ROM
 #define USER_ROM_BASE_ADDR 0x20000000
+
+// User Flash
+#define USER_FLASH_BASE_ADDR 0x30000000

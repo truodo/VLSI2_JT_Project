@@ -46,7 +46,7 @@ module spiflash (
 	inout io2,
 	inout io3
 );
-	localparam verbose = 1;
+	localparam verbose = 0; // activate this to see SPI message logs
 	localparam integer latency = 4; //8;
 
 	reg [7:0] buffer;
@@ -95,20 +95,20 @@ module spiflash (
 	wire io2_delayed;
 	wire io3_delayed;
 
-	assign #1 io0_delayed = io0;
-	assign #1 io1_delayed = io1;
-	assign #1 io2_delayed = io2;
-	assign #1 io3_delayed = io3;
+	assign io0_delayed = io0;
+	assign io1_delayed = io1;
+	assign io2_delayed = io2;
+	assign io3_delayed = io3;
 
 	// 16 MB (128Mb) Flash
 	reg [7:0] memory [0:16*1024*1024-1];
 
-	reg [1023:0] firmware_file;
-	initial begin
-		if (!$value$plusargs("firmware=%s", firmware_file))
-			firmware_file = "firmware.hex";
-		$readmemh(firmware_file, memory);
-	end
+	// reg [1023:0] firmware_file;
+	// initial begin
+	// 	if (!$value$plusargs("firmware=%s", firmware_file))
+	// 		firmware_file = "firmware.hex";
+	// 	$readmemh(firmware_file, memory);
+	// end
 
 	task spi_action;
 		begin
@@ -217,7 +217,8 @@ module spiflash (
 
 				if (bytecount >= 5) begin
 					buffer = memory[spi_addr];
-					spi_addr = spi_addr + 1;
+					// spi_addr = spi_addr + 1;
+					spi_addr = spi_addr;
 				end
 			end
 
@@ -382,6 +383,7 @@ module spiflash (
 						bitcount = 0;
 						bytecount = bytecount + 1;
 						spi_action;
+						// $display("[TB] Buffer: 0x%h\n", buffer);
 					end
 				end
 				mode_dspi_rd, mode_dspi_wr: begin
