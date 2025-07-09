@@ -22,11 +22,11 @@
 #   die area (4sqmm)       2235.0 x 2235.0
 #   io cell dimensions      180.0 x   80.0
 #   bonding pad area (est)   70.0 x   70.0
-#   seal ring width (est)    50.0 x    -
+#   seal ring width (est)    39.0 x    -
 #
 # OpenROAD:
-#   OR die area            1995.0 x 1995.0
-#   core area              1635.0 x 1635.0
+#   OR die area            2017.0 x 2017.0
+#   core area              1657.0 x 1657.0
 #   total silicon area
 #
 # pad pitch (min)            90.0     90.0
@@ -43,8 +43,13 @@ make_io_sites -horizontal_site sg13g2_ioSite \
 set padD    180; # pad depth (edge to core)
 set padW     80; # pad width (beachfront)
 
-set chipH  1995; # left/right (height)
-set chipW  1995; # top/bottom (width)
+# Size of the die
+set dieW            2235.0
+set dieH            2235.0
+
+# Size of the chip
+set chipW           [expr $dieW - 2 * (39.0 + 70.0)]; # top/bottom (width)
+set chipH           [expr $dieH - 2 * (39.0 + 70.0)]; # left/right (height)
 
 #Edge: LEFT (top to bottom)
 set numPads 16
