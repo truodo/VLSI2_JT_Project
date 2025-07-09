@@ -25,7 +25,7 @@ module user_rom #(
   output obi_rsp_t obi_rsp_o
 );
 
-  localparam ADDR_SIZE = 5;
+  localparam ADDR_SIZE = 6;
 
   // Define some registers to hold the requests fields
   logic req_d, req_q; // Request valid
@@ -71,6 +71,7 @@ module user_rom #(
           'h2: rsp_data = 32'h6E612064;
           'h3: rsp_data = 32'h72742064;
           'h4: rsp_data = 32'h6F646F75;
+          'h5: rsp_data = 32'h00000000;
           default: rsp_data = 32'h0;
         endcase
       end else begin
