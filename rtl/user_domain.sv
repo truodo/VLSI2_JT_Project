@@ -161,7 +161,6 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
   );
 
   // User flash Subordinate
-  // `ifdef PnR // TODO check this again
   obi2ahbm_adapter i_obi2ahbm_adapter_flash (
        // Clock and reset
        .hclk_i      ( clk_i ),                // (I) AHB clock
@@ -229,60 +228,5 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
         .dout    ( flash_dout_o   ),
         .douten  ( flash_dout_en_o )
     );
-
-  //   `else
-
-  //   // Use a ROM for FPGA
-    
-  //   localparam RomAddrWidth = 12; // in words, in total 16kByte memory
-
-  //   logic rom_req, rom_we, rom_gnt, rom_single_err;
-  //   logic [SbrObiCfg.AddrWidth-1:0] rom_byte_addr;
-  //   logic [RomAddrWidth-1:0] rom_word_addr;
-  //   logic [SbrObiCfg.DataWidth-1:0] rom_wdata, rom_rdata;
-  //   logic [SbrObiCfg.DataWidth/8-1:0] rom_be;
-
-  //   obi_sram_shim #(
-  //     .ObiCfg    ( SbrObiCfg     ),
-  //     .obi_req_t ( sbr_obi_req_t ),
-  //     .obi_rsp_t ( sbr_obi_rsp_t )
-  //   ) i_rom_shim (
-  //     .clk_i,
-  //     .rst_ni,
-
-  //     .obi_req_i ( user_flash_obi_req ),
-  //     .obi_rsp_o ( user_flash_obi_rsp ),
-
-  //     .req_o   ( rom_req       ),
-  //     .we_o    ( rom_we        ),
-  //     .addr_o  ( rom_byte_addr ),
-  //     .wdata_o ( rom_wdata     ),
-  //     .be_o    ( rom_be        ),
-
-  //     .gnt_i   ( rom_gnt   ),
-  //     .rdata_i ( rom_rdata )
-  //   );
-
-  //   assign rom_word_addr = rom_byte_addr[SbrObiCfg.AddrWidth-1:2];
-
-  //   // 4kByte memory
-  //   logic [31:0] rom [2**RomAddrWidth];
-    
-  //   // 	initial begin
-	// 	// $readmemh("firmware/hello_world/hello_world.hex", rom);
-	// // end
-    
-  //   always @(posedge clk_i) begin
-  //       if (rom_req) begin
-  //           if (!rom_we) begin
-  //               rom_rdata <= rom[rom_word_addr];
-  //           end
-  //       end
-  //   end
-
-  //   assign rom_gnt = 1'b1;
-    
-  //   `endif
-  
 
 endmodule
