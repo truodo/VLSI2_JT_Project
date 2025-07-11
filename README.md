@@ -1,31 +1,33 @@
-# Croc System-on-Chip
+# Extending the Croc System-on-Chip with a Flash Controller
 
-A simple SoC for education using PULP IPs. Croc includes all scripts necessary to produce a nearly finished chip in [IHPs open-source 130nm technology](https://github.com/IHP-GmbH/IHP-Open-PDK/tree/main).
+This project extends the Croc SoC with a Flash Read Controller.
+
+It is based on Croc, a simple SoC for education using PULP IPs. Croc includes all scripts necessary to produce a nearly finished chip in [IHPs open-source 130nm technology](https://github.com/IHP-GmbH/IHP-Open-PDK/tree/main).
 
 As it is oriented towards education, it forgoes some configurability to increase readability of the RTL and scripts.
 
 Croc is developed as part of the PULP project, a joint effort between ETH Zurich and the University of Bologna.
 
-Croc was successfully taped out in Nov 2024. The chip is called [MLEM](http://asic.ee.ethz.ch/2024/MLEM.html), named after the sound Yoshi makes when eating a tasty fruit.
+The original croc was successfully taped out in Nov 2024. The chip is called [MLEM](http://asic.ee.ethz.ch/2024/MLEM.html), named after the sound Yoshi makes when eating a tasty fruit.
 MLEM was designed and prepared for tapeout by ETHZ students as a bachelor project. The exact code and scripts used for the tapeout can be seen in the frozen [mlem-tapeout](https://github.com/pulp-platform/croc/tree/mlem-tapeout) branch.
-
-
-**IMPORTANT: Update to 1.1 recommended.**  
-Release 1.1 and newer includes a fix for the SRAMs where the `A_DLY` pin was tied low instead of high. The pin controls internal timings and the old version may create violations for some SRAMs.  
-
 
 ## Architecture
 
-![Croc block diagram](doc/croc_arch.svg)
+The following diagram illustrates the extended Croc SoC architecture:
+
+![Croc block diagram](doc/croc_arch_new.png)
 
 The SoC is composed of two main parts:
 - The `croc_domain` containing a CVE2 core (a fork of Ibex), SRAM, an OBI crossbar and a few simple peripherals 
-- The `user_domain` where students are invited to add their own designs or other open-source designs (peripherals, accelerators...)
+- The `user_domain` containing the user ROM and the Flash Read Controller
 
 The main interconnect is OBI, you can find [the spec online](https://github.com/openhwgroup/obi/blob/072d9173c1f2d79471d6f2a10eae59ee387d4c6f/OBI-v1.6.0.pdf). 
 
 The various IPs of the SoC (UART, OBI, debug-module, timer...) come from other PULP repositories and are managed by [Bender](https://github.com/pulp-platform/bender).
 To make it easier to browse and understand, only the currently used files are included in `rtl/<IP>`. You may want to explore the repositories of the respective IPs to find their documentation or additional functionality, the urls are in `Bender.yml`.
+
+The user flash read controller is based on mole99's' [greyhound-ihp](https://github.com/mole99/greyhound-ihp/tree/main) and their fork of efabless's [EF_qspi_xip_ctrl](https://github.com/mole99/EF_QSPI_XIP_CTRL).
+
 
 ## Configuration
 
@@ -43,14 +45,13 @@ The SRAMs are instantiated via a technology wrapper called `tc_sram` (tc: tech_c
 
 ## Bootmodes
 
-Currently the only way to boot is via JTAG.
+Currently the default way to boot is via JTAG.
+
+Now with the new flash read controller it should be possible to implement a boot from non-volatile flash memory. This method would allow for booting without requiring another computer at every reboot. (this is not tested)
 
 ## Memory Map
 
-If possible, the memory map should remain compatible with [Cheshire's memory map](https://pulp-platform.github.io/cheshire/um/arch/#memory-map).  
-Further each new subordinate should occupy multiples of 4KB of the address space (`32'h0000_1000`).
-
-The address map of the default configuration is as follows:
+The address map of the configuration is as follows:
 
 | Start Address   | Stop Address    | Description                                |
 |-----------------|-----------------|--------------------------------------------|
@@ -59,15 +60,11 @@ The address map of the default configuration is as follows:
 | `32'h0300_2000` | `32'h0300_3000` | UART peripheral                            |
 | `32'h0300_5000` | `32'h0300_6000` | GPIO peripheral                            |
 | `32'h0300_A000` | `32'h0300_B000` | Timer peripheral                           |
-| `32'h1000_0000` | `+SRAM_SIZE`    | Memory banks (SRAM)                        |
+| `32'h1000_0000` | `32’h1000_1000` | Memory banks (SRAM)                        |
 | `32'h2000_0000` | `32'h8000_0000` | Passthrough to user domain                 |
-| `32'h2000_0000` | `32'h2000_1000` | reserved for string formatted user ROM*    |
+| `32'h2000_0000` | `32'h2000_1000` | User ROM								     |
+| `32’h3000_0000` | `32’h3100_0000` | User Flash Controller					     |
 
-
-*If people modify Croc we suggest they add a ROM at this address containing additional information 
-like the names of the developers, a project link or similar. This can then be written out via UART.  
-We ask people to format the ROM like a C string with zero termination and using ASCII encoding if feasible.  
-The [MLEM user ROM](https://github.com/pulp-platform/croc/blob/mlem-tapeout/rtl/user_domain/user_rom.sv) may serve as a reference implementation.
 
 ## Flow
 ```mermaid
@@ -86,10 +83,11 @@ Currently, the final GDS is still missing the following things:
 - sealring
 These can be added in KLayout, check the [IHP repository](https://github.com/IHP-GmbH/IHP-Open-PDK/tree/main) (possible the dev branch) for a reference script.
 
-### Example Results
+<!-- TODO if we still have time -->
+<!-- ### Example Results
 Cell/Module placement                      |  Routing
 :-----------------------------------------:|:------------------------------------:
-![Chip module view](doc/croc_modules.jpg)  |  ![Chip routed](doc/croc_routed.jpg)
+![Chip module view](doc/croc_modules.jpg)  |  ![Chip routed](doc/croc_routed.jpg) -->
 
 
 ## Requirements
@@ -160,6 +158,7 @@ The SoC is fully functional as-is and a simple software example is provided for 
 To run the synthesis and place & route flow execute:
 ```sh
 make checkout
+make yosys-flist
 make yosys
 make openroad
 make klayout
