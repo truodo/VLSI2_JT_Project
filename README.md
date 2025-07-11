@@ -26,7 +26,7 @@ The main interconnect is OBI, you can find [the spec online](https://github.com/
 The various IPs of the SoC (UART, OBI, debug-module, timer...) come from other PULP repositories and are managed by [Bender](https://github.com/pulp-platform/bender).
 To make it easier to browse and understand, only the currently used files are included in `rtl/<IP>`. You may want to explore the repositories of the respective IPs to find their documentation or additional functionality, the urls are in `Bender.yml`.
 
-The user flash read controller is based on mole99's' [greyhound-ihp](https://github.com/mole99/greyhound-ihp/tree/main) and their fork of efabless's [EF_qspi_xip_ctrl](https://github.com/mole99/EF_QSPI_XIP_CTRL).
+The user flash read controller is based on mole99's [greyhound-ihp](https://github.com/mole99/greyhound-ihp/tree/main) and their fork of efabless's [EF_qspi_xip_ctrl](https://github.com/mole99/EF_QSPI_XIP_CTRL).
 
 
 ## Configuration
