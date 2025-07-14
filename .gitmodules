@@ -1,3 +1,6 @@
 [submodule "ihp13/pdk"]
 	path = ihp13/pdk
 	url = https://github.com/IHP-GmbH/IHP-Open-PDK
+[submodule "ip/EF_QSPI_XIP_CTRL"]
+	path = ip/EF_QSPI_XIP_CTRL
+	url = https://github.com/mole99/EF_QSPI_XIP_CTRL

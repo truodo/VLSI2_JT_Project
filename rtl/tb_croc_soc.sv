@@ -42,6 +42,15 @@ module tb_croc_soc #(
     logic [GpioCount-1:0] gpio_o;            
     logic [GpioCount-1:0] gpio_out_en_o;
 
+    logic           flash_sck_o;
+    logic           flash_ce_n_o;
+    logic [3:0]     flash_din_i;
+    logic [3:0]     flash_dout_o;
+    logic [3:0]     flash_dout_en_o;
+
+    wire [3:0] flash_io;
+    
+
     // Register addresses
     localparam bit [31:0] BootAddrAddr   = croc_pkg::SocCtrlAddrOffset
                                            + soc_ctrl_reg_pkg::SOC_CTRL_BOOTADDR_OFFSET;
@@ -92,6 +101,7 @@ module tb_croc_soc #(
         .rst_no ( )
     );
 
+    
 
     ////////////
     //  JTAG  //
@@ -395,7 +405,125 @@ module tb_croc_soc #(
         end
     end
 
+// new test
 
+    //////////////////
+    //  QSPI Flash  //
+    //////////////////
+
+    // Bidirectional IO handling
+    assign flash_din_i = flash_io;  // Continuous assignment for input
+
+
+    // Tri-state buffers for Quad I/O (behavioral for testbench)
+    assign flash_io[0] = flash_dout_en_o[0] ? flash_dout_o[0] : 1'bz;
+    assign flash_io[1] = flash_dout_en_o[1] ? flash_dout_o[1] : 1'bz;
+    assign flash_io[2] = flash_dout_en_o[2] ? flash_dout_o[2] : 1'bz;
+    assign flash_io[3] = flash_dout_en_o[3] ? flash_dout_o[3] : 1'bz;
+
+    // flash simulation test
+    // you may need to add a clock to flash_sck_o
+    // task automatic flash_power_up;
+    //     begin
+    //         $display("[TB] Flash power-up sequence started");
+    //         flash_ce_n_o = 1'b1;       // Start with chip deselected
+    //         #100;
+    //         @(negedge clk);
+    //         flash_ce_n_o = 1'b0;       // Activate chip
+    //         spi_send_byte(8'hAB);      // Power-up command
+    //         flash_ce_n_o = 1'b1;       // Release chip
+    //         #10000;                    // Simulated wake-up delay
+    //         $display("[TB] Flash power-up complete");
+
+    //         // if (spiflash.powered_up !== 1'b1)
+    //         //     $error("Flash failed to power up!");
+    //         // else
+    //         //     $display("[%0t] Flash powered up successfully", $time);
+    //     end
+    // endtask
+
+    // task automatic spi_send_byte(input [7:0] data);
+    //     integer i;
+    //     begin
+    //         flash_dout_en_o = 4'b0001;  // Only drive MOSI (io0)
+    //         $display("[TB] SPI Send: 0x%h", data);
+            
+    //         for (i = 7; i >= 0; i = i - 1) begin
+                
+    //             flash_dout_o[0] = data[i];
+                
+    //             @(negedge clk);
+                
+    //             // Debug output per bit (optional)
+    //             // $display("[TB] Sending bit %d: %b", i, data[i]);
+    //         end
+            
+    //         flash_dout_en_o = 4'b0000;  // Release bus
+    //     end
+    // endtask
+
+    // task automatic spi_recv_byte(output [7:0] data);
+    //     integer i;
+    //     begin
+    //         flash_dout_en_o = 4'b0000;  // All lines high-Z
+    //         data = 0;
+            
+    //         for (i = 7; i >= 0; i = i - 1) begin
+    //             @(posedge clk);
+    //             data[i] = flash_io[1];   // MISO on io1 
+    //         end
+            
+    //         $display("[TB] SPI Received: 0x%h", data);
+    //     end
+    // endtask
+
+    // task automatic spi_read(
+    //     input [31:0] addr,
+    //     output [7:0] read_data
+    // );
+    //     begin
+    //         $display("[TB] SPI Read from address: 0x%h", addr);
+    //         @(negedge clk);
+    //         flash_ce_n_o = 1'b0;        // Activate chip
+    //         // #10;                        // tCSS setup time
+            
+    //         spi_send_byte(8'h03);       // Read command
+    //         spi_send_byte(addr[23:16]); // Address bytes
+    //         spi_send_byte(addr[15:8]);
+    //         spi_send_byte(addr[7:0]);
+            
+    //         spi_recv_byte(read_data);   // Read data byte
+            
+    //         flash_ce_n_o = 1'b1;        // Deactivate chip
+    //         #20;                       // tCSH hold time
+            
+    //         $display("[TB] Read data: 0x%h", read_data);
+    //     end
+    // endtask
+
+    // // Helper task for more complex operations
+    // task automatic flash_reset;
+    //     begin
+    //         $display("[TB] Flash reset sequence");
+    //         flash_ce_n_o = 1'b0;
+    //         spi_send_byte(8'hF0);      // Reset command
+    //         flash_ce_n_o = 1'b1;
+    //         #100000;                   // Extended reset delay
+    //     end
+    // endtask
+
+
+// end new test
+
+
+    spiflash i_spiflash (
+	    .csb (flash_ce_n_o),
+	    .clk (flash_sck_o),
+	    .io0 (flash_io[0]), // MOSI
+	    .io1 (flash_io[1]), // MISO
+	    .io2 (flash_io[2]),
+	    .io3 (flash_io[3])
+    );
 
     ////////////
     //  DUT   //
@@ -425,7 +553,13 @@ module tb_croc_soc #(
 
         .gpio_i        ( gpio_i        ),             
         .gpio_o        ( gpio_o        ),            
-        .gpio_out_en_o ( gpio_out_en_o )
+        .gpio_out_en_o ( gpio_out_en_o ),
+
+        .flash_sck_o     ( flash_sck_o      ),             
+        .flash_ce_n_o    ( flash_ce_n_o     ),            
+        .flash_din_i     ( flash_din_i      ),
+        .flash_dout_o    ( flash_dout_o     ),
+        .flash_dout_en_o ( flash_dout_en_o  )
     );
 
     assign gpio_i[ 3:0]          = '0;
@@ -438,6 +572,7 @@ module tb_croc_soc #(
     /////////////////
 
     logic [31:0] tb_data;
+    reg [7:0] rd_data;
 
     initial begin
         $timeformat(-9, 0, "ns", 12); // 1: scale (ns=-9), 2: decimals, 3: suffix, 4: print-field width
@@ -449,8 +584,75 @@ module tb_croc_soc #(
 
         fetch_en_i = 1'b0;
         
+        //flash things
+        // flash_ce_n_o = 1;
+        // clk = 0;
+        // flash_dout_o = 0;
+        // flash_dout_en_o = 0;
+
         // wait for reset
         #ClkPeriod;
+        // Preload test pattern
+        i_spiflash.memory[0] = 8'hAE;
+        i_spiflash.memory[1] = 8'h23;
+        i_spiflash.memory[2] = 8'h45;
+        i_spiflash.memory[3] = 8'h67;
+        i_spiflash.memory[4] = 8'h89;
+        i_spiflash.memory[5] = 8'hAB;
+        i_spiflash.memory[6] = 8'hCD;
+        i_spiflash.memory[7] = 8'hEF;
+
+        // Fills the flash with 1
+        // for (int i = 24'h000000; i < 24'h00FFFFFF; i++) begin
+        // i_spiflash.memory[i] = 8'hFF;
+        // end
+        
+        // end of flash
+        i_spiflash.memory[24'hFFFFFE] = 8'h32;
+        i_spiflash.memory[24'hFFFFFF] = 8'h10;
+
+        // flash_power_up();
+        $display("=== Starting SPI transaction ===");
+
+
+        // flash simulation test
+        // // spi_read(user_pkg::FlashAddrOffset, rd_data);
+        // spi_read(32'h0000_0000, rd_data);
+        // $display("Read 0x%h from 0x000000 (expected 0x01)", rd_data);
+        
+        // // spi_read(user_pkg::FlashAddrOffset+1, rd_data);
+        // spi_read(32'h0000_0001, rd_data);
+        // $display("Read 0x%h from 0x000001 (expected 0x23)", rd_data); 
+
+        // spi_read(32'h0000_0002, rd_data);
+        // $display("Read 0x%h from 0x000002 (expected 0x45)", rd_data); 
+
+        // // spi_read(user_pkg::FlashAddrOffset+2, rd_data);
+        // spi_read(32'h0000_0003, rd_data);
+        // $display("Read 0x%h ", rd_data); 
+
+
+        // // spi_read(user_pkg::FlashAddrOffset+3, rd_data);
+        // spi_read(32'h0000_0004, rd_data);
+        // $display("Read 0x%h ", rd_data); 
+
+
+        // // spi_read(user_pkg::FlashAddrOffset+13, rd_data);
+        // spi_read(32'h0000_0005, rd_data);
+        // $display("Read 0x%h ", rd_data); 
+
+        // spi_read(32'h0000_0006, rd_data);
+        // $display("Read 0x%h ", rd_data); 
+
+        // spi_read(32'h0000_0007, rd_data);
+        // $display("Read 0x%h ", rd_data); 
+
+        // spi_read(32'h00FF_FFFE, rd_data);
+        // $display("Read 0x%h", rd_data);
+
+        // // spi_read(user_pkg::FlashAddrOffset+0, rd_data);
+        // spi_read(32'h00FF_FFFF, rd_data);
+        // $display("Read 0x%h", rd_data);
 
         // init jtag
         jtag_init();
@@ -472,6 +674,10 @@ module tb_croc_soc #(
         // wait for non-zero return value (written into core status register)
         $display("@%t | [CORE] Wait for end of code...", $time);
         jtag_wait_for_eoc(tb_data);
+        
+
+        
+
 
         // finish simulation
         repeat(50) @(posedge clk);
@@ -480,5 +686,6 @@ module tb_croc_soc #(
         `endif
         $finish();
     end
+
 
 endmodule

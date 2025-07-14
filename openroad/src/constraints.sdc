@@ -123,3 +123,17 @@ set_input_delay  -min -add_delay -clock clk_sys [ expr $TCK_SYS * 0.10 ] [get_po
 set_input_delay  -max -add_delay -clock clk_sys [ expr $TCK_SYS * 0.30 ] [get_ports uart_rx_i]
 set_output_delay -min -add_delay -clock clk_sys [ expr $TCK_SYS * 0.10 ] [get_ports uart_tx_o]
 set_output_delay -max -add_delay -clock clk_sys [ expr $TCK_SYS * 0.30 ] [get_ports uart_tx_o]
+
+######################
+## FLASH Controller ##
+######################
+puts "FLASH Controller..."
+
+set_output_delay  -min -add_delay -clock clk_sys [ expr $TCK_SYS * 0.10 ] [get_ports flash_sck_o]
+set_output_delay  -max -add_delay -clock clk_sys [ expr $TCK_SYS * 0.30 ] [get_ports flash_sck_o]
+set_output_delay -min -add_delay -clock clk_sys [ expr $TCK_SYS * 0.10 ] [get_ports flash_ce_n_o]
+set_output_delay -max -add_delay -clock clk_sys [ expr $TCK_SYS * 0.30 ] [get_ports flash_ce_n_o]
+set_output_delay -min -add_delay -clock clk_sys [ expr $TCK_SYS * 0.10 ] [get_ports {flash_d*}]
+set_output_delay -max -add_delay -clock clk_sys [ expr $TCK_SYS * 0.30 ] [get_ports {flash_d*}]
+set_input_delay -min -add_delay -clock clk_sys [ expr $TCK_SYS * 0.10 ] [get_ports {flash_d*}]
+set_input_delay -max -add_delay -clock clk_sys [ expr $TCK_SYS * 0.30 ] [get_ports {flash_d*}]

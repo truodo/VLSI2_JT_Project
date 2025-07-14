@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2023 IHP PDK Authors
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+     https://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!--
+Zerun Tue 27 Feb 13:45:25 CET 2024
+ - initial version download from IHP github
+ - add layer_map and lef files
+-->
+
+<technology>
+ <name>sg13g2</name>
+ <description>IHP SiGe 130nm technology</description>
+ <group/>
+ <dbu>0.001</dbu>
+ <base-path>$(appdata_path)/tech</base-path>
+ <original-base-path>$(appdata_path)/tech</original-base-path>
+ <layer-properties_file>/usr/pack/ihp-sg13-kgf/dz/klayout/sg13g2.lyp</layer-properties_file>
+ <add-other-layers>true</add-other-layers>
+ <reader-options>
+  <gds2>
+   <box-mode>1</box-mode>
+   <allow-big-records>true</allow-big-records>
+   <allow-multi-xy-records>true</allow-multi-xy-records>
+  </gds2>
+  <common>
+   <create-other-layers>true</create-other-layers>
+   <layer-map>layer_map()</layer-map>
+   <enable-properties>true</enable-properties>
+   <enable-text-objects>true</enable-text-objects>
+  </common>
+  <lefdef>
+   <read-all-layers>true</read-all-layers>
+   <layer-map>layer_map('OUTLINE : 189/4';'Activ : 1/0';'Activ.LABEL : 1/1';'Activ.PIN : 1/2';'BiWind : 3/0';'GatPoly : 5/0';'GatPoly.LABEL : 5/1';'GatPoly.PIN : 5/2';'Cont : 6/0';'nSD : 7/0';'nSD.blk : 7/21';'Metal1 : 8/0';'Metal1.LABEL : 8/1';'Metal1.PIN : 8/2';'Passiv : 9/0';'Passiv.LABEL : 9/1';'Passiv.PIN : 9/2';'Passiv.pdl : 9/40';'Metal2 : 10/0';'Metal2.LABEL : 10/1';'Metal2.PIN : 10/2';'BasPoly : 13/0';'BasPoly.LABEL : 13/1';'BasPoly.PIN : 13/2';'pSD : 14/0';'NLDB : 15/0';'DigiBnd : 16/0';'DigiBnd.dw0 : 16/10';'Via1 : 19/0';'BackMetal1 : 20/0';'BackMetal1.LABEL : 20/1';'BackMetal1.PIN : 20/2';'BackPassiv : 23/0';'RES : 24/0';'RES.LABEL : 24/1';'SRAM : 25/0';'SRAM.LABEL : 25/1';'TRANS : 26/0';'IND : 27/0';'IND.PIN : 27/2';'SalBlock : 28/0';'Via2 : 29/0';'Metal3 : 30/0';'Metal3.LABEL : 30/1';'Metal3.PIN : 30/2';'NWell : 31/0';'NWell.LABEL : 31/1';'NWell.PIN : 31/2';'nBuLay : 32/0';'nBuLay.LABEL : 32/1';'nBuLay.PIN : 32/2';'nBuLay.blk : 32/21';'EmWind : 33/0';'DeepCo : 35/0';'MIM : 36/0';'EdgeSeal : 39/0';'Substrate : 40/0';'dfpad : 41/0';'ThickGateOx : 44/0';'PLDB : 45/0';'PWell : 46/0';'PWell.LABEL : 46/1';'PWell.PIN : 46/2';'PWell.blk : 46/21';'Via3 : 49/0';'Metal4 : 50/0';'Metal4.LABEL : 50/1';'Metal4.PIN : 50/2';'HeatTrans : 51/0';'HeatRes : 52/0';'FBE : 54/0';'EmPoly : 55/0';'DigiSub : 60/0';'NoDRC : 62/0';'TEXT : 63/0';'Via4 : 66/0';'Metal5 : 67/0';'Metal5.LABEL : 67/1';'Metal5.PIN : 67/2';'RadHard : 68/0';'MemCap : 69/0';'Varicap : 70/0';'IntBondVia : 72/0';'IntBondMet : 73/0';'DevBondVia : 74/0';'DevBondMet : 75/0';'DevTrench : 76/0';'Redist : 77/0';'GraphBot : 78/0';'GraphTop : 79/0';'AntVia1 : 83/0';'AntMetal2 : 84/0';'GraphCont : 85/0';'SiWG : 86/0';'SiGrating : 87/0';'SiNGrating : 88/0';'GraphPas : 89/0';'EmWind3 : 90/0';'EmWiHV3 : 91/0';'RedBuLay : 92/0';'SMOS : 93/0';'GraphPad : 97/0';'Polimide : 98/0';'Polimide.LABEL : 98/1';'Polimide.PIN : 98/2';'Recog : 99/0';'Recog.PIN : 99/2';'Recog.esd : 99/30';'Recog.dio : 99/31';'Recog.tsv : 99/32';'Recog.otp : 99/37';'Recog.pdio : 99/38';'Recog.mom : 99/39';'ColOpen : 101/0';'GraphMetal1 : 109/0';'GraphMet1L : 110/0';'EXTBlock : 111/0';'NLDD : 112/0';'PLDD : 113/0';'NExt : 114/0';'PExt : 115/0';'NExtHV : 116/0';'PExtHV : 117/0';'GraphGate : 118/0';'SiNWG : 119/0';'MEMPAD : 124/0';'TopVia1 : 125/0';'TopMetal1 : 126/0';'TopMetal1.LABEL : 126/1';'TopMetal1.PIN : 126/2';'INLDPWL : 127/0';'PolyRes : 128/0';'PolyRes.LABEL : 128/1';'PolyRes.PIN : 128/2';'Vmim : 129/0';'nBuLayCut : 131/0';'AntMetal1 : 132/0';'TopVia2 : 133/0';'TopMetal2 : 134/0';'TopMetal2.LABEL : 134/1';'TopMetal2.PIN : 134/2';'SNSRing : 135/0';'Sensor : 136/0';'SNSArms : 137/0';'SNSCMOSVia : 138/0';'ColWind : 139/0';'FLM : 142/0';'HafniumOx : 143/0';'MEMVia : 145/0';'ThinFilmRes : 146/0';'RFMEM : 147/0';'NoRCX : 148/0';'SNSBotVia : 149/0';'SNSTopVia : 151/0';'DeepVia : 152/0';'FGEtch : 153/0';'CtrGat : 154/0';'FGImp : 155/0';'EmWiHV : 156/0';'LBE : 157/0';'AlCuStop : 159/0';'NoMetFiller : 160/0';'prBoundary : 189/0';'prBoundary.LABEL : 189/1';)</layer-map>
+   <dbu>0.001</dbu>
+   <produce-net-names>true</produce-net-names>
+   <net-property-name>#1</net-property-name>
+   <produce-inst-names>true</produce-inst-names>
+   <inst-property-name>#1</inst-property-name>
+   <produce-pin-names>false</produce-pin-names>
+   <pin-property-name>#1</pin-property-name>
+   <produce-cell-outlines>true</produce-cell-outlines>
+   <cell-outline-layer>OUTLINE</cell-outline-layer>
+   <produce-placement-blockages>true</produce-placement-blockages>
+   <placement-blockage-layer>PLACEMENT_BLK</placement-blockage-layer>
+   <produce-regions>true</produce-regions>
+   <region-layer>REGIONS</region-layer>
+   <produce-via-geometry>true</produce-via-geometry>
+   <via_geometry-suffix-string/>
+   <via_geometry-datatype-string>0</via_geometry-datatype-string>
+   <produce-pins>true</produce-pins>
+   <pins-suffix-string>.PIN</pins-suffix-string>
+   <pins-datatype-string>2</pins-datatype-string>
+   <produce-lef-pins>true</produce-lef-pins>
+   <lef_pins-suffix-string>.PIN</lef_pins-suffix-string>
+   <lef_pins-datatype-string>2</lef_pins-datatype-string>
+   <produce-fills>true</produce-fills>
+   <fills-suffix-string>.FILL</fills-suffix-string>
+   <fills-datatype-string>5</fills-datatype-string>
+   <produce-obstructions>true</produce-obstructions>
+   <obstructions-suffix>.OBS</obstructions-suffix>
+   <obstructions-datatype>3</obstructions-datatype>
+   <produce-blockages>true</produce-blockages>
+   <blockages-suffix>.BLK</blockages-suffix>
+   <blockages-datatype>4</blockages-datatype>
+   <produce-labels>true</produce-labels>
+   <labels-suffix>.LABEL</labels-suffix>
+   <labels-datatype>1</labels-datatype>
+   <produce-lef-labels>true</produce-lef-labels>
+   <lef-labels-suffix>.LABEL</lef-labels-suffix>
+   <lef-labels-datatype>1</lef-labels-datatype>
+   <produce-routing>true</produce-routing>
+   <routing-suffix-string/>
+   <routing-datatype-string>0</routing-datatype-string>
+   <produce-special-routing>true</produce-special-routing>
+   <special-routing-suffix-string/>
+   <special-routing-datatype-string>0</special-routing-datatype-string>
+   <via-cellname-prefix>VIA_</via-cellname-prefix>
+   <read-lef-with-def>true</read-lef-with-def>
+   <macro-resolution-mode>default</macro-resolution-mode>
+   <separate-groups>false</separate-groups>
+   <map-file/>
+   <lef-files>../technology/lef/sg13g2_tech.lef</lef-files>
+   <lef-files>../technology/lef/sg13g2_stdcell.lef</lef-files>
+   <lef-files>../technology/lef/sg13g2_io.lef</lef-files>
+  </lefdef>
+  <mebes>
+   <invert>false</invert>
+   <subresolution>true</subresolution>
+   <produce-boundary>true</produce-boundary>
+   <num-stripes-per-cell>64</num-stripes-per-cell>
+   <num-shapes-per-cell>0</num-shapes-per-cell>
+   <data-layer>1</data-layer>
+   <data-datatype>0</data-datatype>
+   <data-name>DATA</data-name>
+   <boundary-layer>0</boundary-layer>
+   <boundary-datatype>0</boundary-datatype>
+   <boundary-name>BORDER</boundary-name>
+   <layer-map>layer_map()</layer-map>
+   <create-other-layers>true</create-other-layers>
+  </mebes>
+  <dxf>
+   <dbu>0.001</dbu>
+   <unit>1</unit>
+   <text-scaling>100</text-scaling>
+   <circle-points>100</circle-points>
+   <circle-accuracy>0</circle-accuracy>
+   <contour-accuracy>0</contour-accuracy>
+   <polyline-mode>0</polyline-mode>
+   <render-texts-as-polygons>false</render-texts-as-polygons>
+   <keep-other-cells>false</keep-other-cells>
+   <keep-layer-names>false</keep-layer-names>
+   <create-other-layers>true</create-other-layers>
+   <layer-map>layer_map()</layer-map>
+  </dxf>
+  <cif>
+   <wire-mode>0</wire-mode>
+   <dbu>0.001</dbu>
+   <layer-map>layer_map()</layer-map>
+   <create-other-layers>true</create-other-layers>
+   <keep-layer-names>false</keep-layer-names>
+  </cif>
+  <mag>
+   <lambda>1</lambda>
+   <dbu>0.001</dbu>
+   <layer-map>layer_map()</layer-map>
+   <create-other-layers>true</create-other-layers>
+   <keep-layer-names>false</keep-layer-names>
+   <merge>true</merge>
+   <lib-paths>
+   </lib-paths>
+  </mag>
+ </reader-options>
+ <writer-options>
+  <format>GDS2</format>
+  <gds2>
+   <write-timestamps>true</write-timestamps>
+   <write-cell-properties>false</write-cell-properties>
+   <write-file-properties>false</write-file-properties>
+   <no-zero-length-paths>false</no-zero-length-paths>
+   <multi-xy-records>false</multi-xy-records>
+   <resolve-skew-arrays>false</resolve-skew-arrays>
+   <max-vertex-count>8000</max-vertex-count>
+   <max-cellname-length>32000</max-cellname-length>
+   <libname>LIB</libname>
+  </gds2>
+  <oasis>
+   <compression-level>2</compression-level>
+   <write-cblocks>true</write-cblocks>
+   <strict-mode>true</strict-mode>
+   <write-std-properties>1</write-std-properties>
+   <subst-char>*</subst-char>
+   <permissive>false</permissive>
+  </oasis>
+  <cif>
+   <polygon-mode>0</polygon-mode>
+  </cif>
+  <cif>
+   <dummy-calls>false</dummy-calls>
+   <blank-separator>false</blank-separator>
+  </cif>
+  <mag>
+   <lambda>0</lambda>
+   <tech/>
+   <write-timestamp>true</write-timestamp>
+  </mag>
+ </writer-options>
+ <connectivity>
+  <connection>GatPoly,Cont,Metal1</connection>
+  <connection>Diff,Cont,Metal1</connection>
+  <connection>Metal1,Via1,Metal2</connection>
+  <connection>Metal2,Via2,Metal3</connection>
+  <connection>Metal3,Via3,Metal4</connection>
+  <connection>Metal4,Via4,Metal5</connection>
+  <connection>Metal5,TopVia1,TopMetal1</connection>
+  <connection>TopMetal1,TopVia2,TopMetal2</connection>
+  <symbols>SalBlock='28/0'</symbols>
+  <symbols>Activ='1/0-Salblock'</symbols>
+  <symbols>GatPoly='5/0-SalBlock'</symbols>
+  <symbols>Diff='Activ-GatPoly'</symbols>
+  <symbols>Cont='6/0'</symbols>
+  <symbols>Metal1='8/0-8/29'</symbols>
+  <symbols>Via1='19/0'</symbols>
+  <symbols>Metal2='10/0-10/29'</symbols>
+  <symbols>Via2='29/0'</symbols>
+  <symbols>Metal3='30/0-30/29'</symbols>
+  <symbols>Via3='49/0'</symbols>
+  <symbols>Metal4='50/0-50/29'</symbols>
+  <symbols>Via4='66/0'</symbols>
+  <symbols>Metal5='67/0-67/29'</symbols>
+  <symbols>TopVia1='125/0'</symbols>
+  <symbols>TopMetal1='126/0-126/29'</symbols>
+  <symbols>TopVia2='133/0'</symbols>
+  <symbols>TopMetal2='134/0-134/29'</symbols>
+ </connectivity>
+</technology>
