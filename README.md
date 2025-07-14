@@ -83,12 +83,9 @@ Currently, the final GDS is still missing the following things:
 - sealring
 These can be added in KLayout, check the [IHP repository](https://github.com/IHP-GmbH/IHP-Open-PDK/tree/main) (possible the dev branch) for a reference script.
 
-<!-- TODO if we still have time -->
-<!-- ### Example Results
-Cell/Module placement                      |  Routing
-:-----------------------------------------:|:------------------------------------:
-![Chip module view](doc/croc_modules.jpg)  |  ![Chip routed](doc/croc_routed.jpg) -->
+### Example Routing Result
 
+<img src="doc/croc_with_flash_controller.png" alt="Chip routed" width="500" />
 
 ## Requirements
 We are using the excellent docker container maintained by Harald Pretl. If you get stuck with installing the tools, we urge you to check the [Tool Repository](https://github.com/iic-jku/IIC-OSIC-TOOLS).  
